@@ -47,7 +47,7 @@ elif file_type == "Video":
 
         # Read the video file and run YOLOv5 on it
         cap = cv2.VideoCapture(file_name)
-        while cap.isOpened():
+        while cap.isOpened() and not quit_playback:
             ret, frame = cap.read()
 
             # Make detections 
@@ -56,8 +56,7 @@ elif file_type == "Video":
             # Show results
             st.image(np.squeeze(results.render()), channels="RGB")
 
-            if cv2.waitKey(10) & 0xFF == ord('q'):
-                break
+            quit_playback = st.button("Quit")
         cap.release()
         cv2.destroyAllWindows()
 
