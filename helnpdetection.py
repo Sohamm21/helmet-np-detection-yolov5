@@ -19,24 +19,18 @@ def run_yolov5_on_image(image):
 
 # Function to run YOLOv5 on a video stream and return the results
 def run_yolov5_on_video():
-    cap = cv2.VideoCapture(0)
-    while cap.isOpened():
-        ret, frame = cap.read()
+    run = st.checkbox('Run')
+    FRAME_WINDOW = st.image([])
+    camera = cv2.VideoCapture(0)
 
-        # Make detections 
+    while run:
+        _, frame = camera.read()
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         results = model(frame)
-
-        # Show results
-        cv2.imshow('YOLO', np.squeeze(results.render()))
-
-        if cv2.waitKey(10) & 0xFF == ord('q'):
-            break
-        elif st.session_state.stop_webcam:
-            # If the user clicked the "Stop" button, break out of the loop
-            break
-    cap.release()
-    cv2.destroyAllWindows()
-
+        FRAME_WINDOW.image(frame)
+    else:
+        st.write('Stopped')
+ 
 
 # Create Streamlit app
 st.title("Helmet and Number Plate Detection")
