@@ -39,7 +39,7 @@ def run_yolov5_on_video():
 
 
 # Create Streamlit app
-st.title("Helmet and Number Plate Detection)
+st.title("Helmet and Number Plate Detection")
 
 # Ask the user if they want to upload an image, video or use the webcam
 file_type = st.selectbox("Select file type", ["Image", "Video", "Webcam"])
