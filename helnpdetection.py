@@ -8,6 +8,7 @@ import time
 import uuid
 from io import BytesIO
 from PIL import Image
+from datetime import datetime
 
 cfg_model_path = "last.pt"
 
