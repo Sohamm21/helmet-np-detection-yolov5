@@ -16,27 +16,13 @@ model = torch.hub.load('ultralytics/yolov5', 'custom', path='last.pt', force_rel
 def run_yolov5_on_image(image):
     results = model(image)
     return results.render()
-
-# Function to run YOLOv5 on a video stream and return the results
-def run_yolov5_on_video():
-    run = st.checkbox('Run')
-    FRAME_WINDOW = st.image([])
-    camera = cv2.VideoCapture(-1)
-
-    while run:
-        _, frame = camera.read()
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        results = model(frame)
-        FRAME_WINDOW.image(frame)
-    else:
-        st.write('Stopped')
  
 
 # Create Streamlit app
 st.title("Helmet and Number Plate Detection")
 
 # Ask the user if they want to upload an image, video or use the webcam
-file_type = st.selectbox("Select file type", ["Image", "Video", "Webcam"])
+file_type = st.selectbox("Select file type", ["Image", "Video"])
 
 if file_type == "Image":
     # Allow the user to upload an image
@@ -76,11 +62,3 @@ elif file_type == "Video":
 
         # Remove the temporary video file
         os.remove(file_name)
-
-elif file_type == "Webcam":
-    # Run YOLOv5 on the webcam stream
-    st.session_state.stop_webcam = False
-    if st.button("Stop"):
-        st.session_state.stop_webcam = True
-    else:
-        run_yolov5_on_video()
