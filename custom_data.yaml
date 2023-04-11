@@ -1,0 +1,8 @@
+path: ../data
+train: ./train/images
+val: ./valid/images
+
+names:
+  0: helmet
+  1: no_helmet
+  2: number_plate
