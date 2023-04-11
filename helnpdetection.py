@@ -57,7 +57,7 @@ elif file_type == "Video":
             # Show results
             st.image(np.squeeze(results.render()), channels="RGB")
 
-            quit_playback = st.button("Quit")
+            quit_playback = st.button("Quit", key="quit_button")
         cap.release()
         cv2.destroyAllWindows()
 
