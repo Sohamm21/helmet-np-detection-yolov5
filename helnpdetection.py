@@ -10,7 +10,7 @@ from PIL import Image
 
 
 # Load YOLOv5 model
-model = torch.hub.load('ultralytics/yolov5', 'custom', path='C:/Users/soham/Documents/MITAOE 24/TY Comp 22-23/Sem 6/PA/Lab/helmet_detection/yolov5/runs/train/exp5/weights/last.pt', force_reload=True)
+model = torch.hub.load('ultralytics/yolov5', 'custom', path='last.pt', force_reload=True)
 
 # Function to run YOLOv5 on an image and return the results
 def run_yolov5_on_image(image):
