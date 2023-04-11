@@ -9,6 +9,7 @@ import uuid
 from io import BytesIO
 from PIL import Image
 
+cfg_model_path = "last.pt"
 
 # Load YOLOv5 model
 model = torch.hub.load('ultralytics/yolov5', 'custom', path='last.pt', force_reload=True)
@@ -18,7 +19,27 @@ def run_yolov5_on_image(image):
     results = model(image)
     return results.render()
  
+def videoInput(device, src):
+    uploaded_video = st.file_uploader("Upload Video", type=['mp4', 'mpeg', 'mov'])
+    if uploaded_video != None:
 
+        ts = datetime.timestamp(datetime.now())
+        imgpath = os.path.join('data/uploads', str(ts)+uploaded_video.name)
+        outputpath = os.path.join('data/video_output', os.path.basename(imgpath))
+
+        with open(imgpath, mode='wb') as f:
+            f.write(uploaded_video.read())  # save video to disk
+
+        st_video = open(imgpath, 'rb')
+        video_bytes = st_video.read()
+        st.video(video_bytes)
+        st.write("Uploaded Video")
+        detect(weights=cfg_model_path, source=imgpath, device=0) if device == 'cuda' else detect(weights=cfg_model_path, source=imgpath, device='cpu')
+        st_video2 = open(outputpath, 'rb')
+        video_bytes2 = st_video2.read()
+        st.video(video_bytes2)
+        st.write("Model Prediction")
+  
 # Create Streamlit app
 st.title("Helmet and Number Plate Detection")
 
@@ -37,29 +58,9 @@ if file_type == "Image":
         st.image(np.squeeze(results), use_column_width=True)
 
 elif file_type == "Video":
-    # Allow the user to upload a video
-    uploaded_file = st.file_uploader("Upload a video", type=["mp4", "avi"])
-    if uploaded_file is not None:
-        # Write the video file to disk
-        file_name = str(uuid.uuid4()) + os.path.splitext(uploaded_file.name)[1]
-        with open(file_name, "wb") as f:
-            f.write(uploaded_file.read())
-
-        # Read the video file and run YOLOv5 on it
-        cap = cv2.VideoCapture(file_name)
-        quit_playback = False
-        while cap.isOpened() and not quit_playback:
-            ret, frame = cap.read()
-
-            # Make detections 
-            results = model(frame)
-
-            # Show results
-            st.image(np.squeeze(results.render()), channels="RGB")
-
-            quit_playback = st.button("Quit", key="quit_button")
-        cap.release()
-        cv2.destroyAllWindows()
-
-        # Remove the temporary video file
-        os.remove(file_name)
+    if torch.cuda.is_available():
+        deviceoption = st.sidebar.radio("Select compute Device.", ['cpu', 'cuda'], disabled = False, index=1)
+    else:
+        deviceoption = st.sidebar.radio("Select compute Device.", ['cpu', 'cuda'], disabled = True, index=0)
+    datasrc = st.sidebar.radio("Select input source.", ['From test set.', 'Upload your own data.'])
+    videoInput(deviceoption, datasrc)
