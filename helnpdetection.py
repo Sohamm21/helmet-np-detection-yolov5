@@ -54,7 +54,7 @@ elif file_type == "Video":
             results = model(frame)
 
             # Show results
-            cv2.imshow('YOLO', np.squeeze(results.render()))
+            st.image(np.squeeze(results.render()), channels="RGB")
 
             if cv2.waitKey(10) & 0xFF == ord('q'):
                 break
