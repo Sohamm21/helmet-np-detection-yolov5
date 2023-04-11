@@ -47,6 +47,7 @@ elif file_type == "Video":
 
         # Read the video file and run YOLOv5 on it
         cap = cv2.VideoCapture(file_name)
+        quit_playback = False
         while cap.isOpened() and not quit_playback:
             ret, frame = cap.read()
 
